@@ -1,7 +1,7 @@
 <?php
 /**
  * プログラミングコンテスト
- * メイン処理（ひねりなし）
+ * メイン処理（ひねる）
  */
 
 /*
@@ -27,7 +27,7 @@ require_once(DIR_PATH . '/' . 'const.php');
 /**
  * 回文を作成し、出力するクラス
  */
-class Palindrome
+class Loop
 {
 	public $first_number = 0;
 	public $first_number_length = 0;
@@ -69,10 +69,17 @@ class Palindrome
 			self::digit($this->first_number);
 		}
 
-		// 2桁以上の場合
-		if($this->first_number_length === 2 || $this->first_number_length > 2 ){
-			self::calculate_digits($this->first_number, $this->end_number, $this->total_count);
+		// 2桁の場合
+		if($this->first_number_length === 2){
+			self::calculate_two_digits($this->first_number, $this->end_number, $this->total_count);
 		}
+
+		// 3桁の場合
+		if($this->first_number_length === 3){
+			self::calculate_three_digits($this->first_number, $this->end_number, $this->total_count);
+		}
+		//　最後に出力
+		print("トータルカウント : $this->total_count" . PHP_EOL);
 	}
 
 	/**
@@ -90,6 +97,65 @@ class Palindrome
 			$this->end_number_length = strlen($number);
 		}
 	}
+
+	/**
+	 * 2桁
+	 * 数値をループし、回文を出力する
+	 *
+	 * @param int $first_number 始まり数値
+	 * @param int $end_number   終わり数値
+	 * @param int $total_count  ループのトータルカウント
+	 */
+	private function calculate_two_digits($first_number, $end_number, $total_count)
+	{
+		// 10から100までの回文は11～99
+		// 11のあとは+11していって、出力する
+
+		// 11に調整
+		// ※2桁で11以上の場合の処理は余裕があれば考える
+		if ($first_number < 11){
+			$fraction = (11 - $first_number);
+			$first_number = $first_number + $fraction;
+			echo($first_number . PHP_EOL);
+		}
+
+		$count = (100 / 11) - 2;
+		for ($i = 0 ; $i < $count ; $i++) {
+			// 文字列を反転させて、同じ場合は、回文
+			$first_number = ($first_number + 11);
+			$reverse_first_number = (int) strrev($first_number);
+			if ($first_number === $reverse_first_number) {
+				// macで改行を確認するため：PHP_EOL
+				echo($first_number . PHP_EOL);
+			}
+			$this->total_count = $total_count++;
+		}
+
+		// 100に調整 ※調整メソッドは別だししたいけど一旦かいとく
+		if ($first_number < 100){
+			$fraction = (100 - $first_number);
+			$this->first_number = $first_number + $fraction;
+		}
+
+		// TODO 数値の桁を計算
+		self::digit($this->first_number);
+	}
+
+	/**
+	 * 3桁
+	 * 数値をループし、回文を出力する
+	 *
+	 * @param int $first_number 始まり数値
+	 * @param int $end_number   終わり数値
+	 * @param int $total_count  ループのトータルカウント
+	 */
+	private function calculate_three_digits($first_number, $end_number, $total_count)
+	{
+		// 100から1000までの回文は101,111,121～999
+		// 外側の数がおなじならおけ
+		var_dump('3けた');
+	}
+
 
 	/**
 	 * 数値をループし、回文を出力する
@@ -111,18 +177,6 @@ class Palindrome
 			}
 			$this->total_count = $total_count++;
 		}
-		print("トータルカウント : $this->total_count" . PHP_EOL);
-
-		//first_number +11をいれまくった配列を作成
-		//配列の大きさの分だけforでループして出力する
-
-		// self::digit($this->end_number,false);
-		// // 終わり数値が2桁より大きいの場合
-		// 上のforを外メソッド化しておく
-		// if ($this->end_number_length > 2) {
-		// }else{
-		// 	// 終わり数値が2桁の場合-余裕があれば
-		// }
 	}
 
 
