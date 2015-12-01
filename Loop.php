@@ -78,6 +78,18 @@ class Loop
 		if($this->first_number_length === 3){
 			self::calculate_three_digits($this->first_number, $this->end_number, $this->total_count);
 		}
+
+		// 4桁の場合
+		if($this->first_number_length === 4){
+			self::calculate_four_digits($this->first_number, $this->end_number, $this->total_count);
+		}
+
+		// 5桁の場合
+		if($this->first_number_length === 5){
+			self::calculate_five_digits($this->first_number, $this->end_number, $this->total_count);
+		}
+
+
 		//　最後に出力
 		print("トータルカウント : $this->total_count" . PHP_EOL);
 	}
@@ -132,9 +144,10 @@ class Loop
 		}
 
 		// 100に調整 ※調整メソッドは別だししたいけど一旦かいとく
-		if ($first_number < 100){
-			$fraction = (100 - $first_number);
+		if ($first_number < 101){
+			$fraction = (101 - $first_number);
 			$this->first_number = $first_number + $fraction;
+			echo($this->first_number . PHP_EOL);
 		}
 
 		// TODO 数値の桁を計算
@@ -151,11 +164,145 @@ class Loop
 	 */
 	private function calculate_three_digits($first_number, $end_number, $total_count)
 	{
-		// 100から1000までの回文は101,111,121～999
+		// 100から1000までの回文は101,111,121..,202,212..～999
 		// 外側の数がおなじならおけ
+		//for中：101にして9回まわして10タス（191）11足す（202）、9回まわす
+		for ($j = 0 ; $j < 9 ; $j++) {
+			//TODO 外メソッド希望
+			for ($i = 0 ; $i < 9 ; $i++) {
+				// 文字列を反転させて、同じ場合は、回文
+				$first_number = ($first_number + 10);
+				$reverse_first_number = (int) strrev($first_number);
+				if ($first_number === $reverse_first_number) {
+					// macで改行を確認するため：PHP_EOL
+					echo($first_number . PHP_EOL);
+				}
+				$this->total_count = $total_count++;
+			}
+
+			$first_number = ($first_number + 11);
+			// 1000以上だったら、調整してループ抜ける
+			if ($first_number > 1000) {
+				$first_number = 1001;
+				$this->first_number = $first_number;//ルール的に微妙の可能性あり//だめならいつもの
+				// continue;
+			}
+			echo($first_number . PHP_EOL);
+		}
+		// TODO 数値の桁を計算
+		self::digit($this->first_number);
+		//TODO
+		var_dump($first_number);
 		var_dump('3けた');
 	}
 
+	/**
+	 * 4桁
+	 * 数値をループし、回文を出力する
+	 *
+	 * @param int $first_number 始まり数値
+	 * @param int $end_number   終わり数値
+	 * @param int $total_count  ループのトータルカウント
+	 */
+	private function calculate_four_digits($first_number, $end_number, $total_count)
+	{
+		// 1000から10000までの回文は1001,1111,1221..,9009,9119,9999
+		// 外側の数がおなじ、もしくは内側がおなじ
+		//for中：1001にして9回まわして110タス（1111）
+		//for外：11足す（2002）、9回まわす
+		for ($j = 0 ; $j < 9 ; $j++) {
+			//TODO 外メソッド希望
+			for ($i = 0 ; $i < 9 ; $i++) {
+				// 文字列を反転させて、同じ場合は、回文
+				$first_number = ($first_number + 110);
+				$reverse_first_number = (int) strrev($first_number);
+				if ($first_number === $reverse_first_number) {
+					// macで改行を確認するため：PHP_EOL
+					echo($first_number . PHP_EOL);
+				}
+				$this->total_count = $total_count++;
+			}
+
+			$first_number = ($first_number + 11);
+			// 1000以上だったら、調整してループ抜ける
+			if ($first_number > 10000) {
+				$first_number = 10001;//ルール的に微妙の可能性あり//だめならいつもの
+				$this->first_number = $first_number;
+				// continue;
+			}
+			echo($first_number . PHP_EOL);
+		}
+		// TODO 数値の桁を計算
+		self::digit($this->first_number);
+		//TODO
+		var_dump($first_number);
+		var_dump('4けた');
+	}
+
+	/**
+	 * 5桁
+	 * 数値をループし、回文を出力する
+	 *
+	 * @param int $first_number 始まり数値
+	 * @param int $end_number   終わり数値
+	 * @param int $total_count  ループのトータルカウント
+	 */
+	private function calculate_five_digits($first_number, $end_number, $total_count)
+	{
+		// 10000から99999までの回文は10001,10101,10201,11011,1221..,9009,9119,9999
+		// 1-5,2-4がおなじ
+		//for中：10001にして9回まわして100タス（10101）-最後10901
+		//for外：110足す（11011）、9回まわす
+
+		for ($k = 0 ; $k < 9 ; $k++) {
+
+			for ($j = 0 ; $j < 9 ; $j++) {
+
+				//TODO 外メソッド希望
+				for ($i = 0 ; $i < 9 ; $i++) {
+					// 文字列を反転させて、同じ場合は、回文
+					$first_number = ($first_number + 100);
+					$reverse_first_number = (int) strrev($first_number);
+					if ($first_number === $reverse_first_number) {
+						// macで改行を確認するため：PHP_EOL
+						echo($first_number . PHP_EOL);
+					}
+					$this->total_count = $total_count++;
+				}
+// TODO
+// var_dump('iiiiii');
+// var_dump($i);
+// var_dump('jjjjj');
+// var_dump($j);
+
+				$first_number = ($first_number + 110);
+				$reverse_first_number = (int) strrev($first_number);
+				if ($first_number === $reverse_first_number) {
+					// macで改行を確認するため：PHP_EOL
+					echo($first_number . PHP_EOL);
+				}
+
+				//19991の次が20101になるので、1タス必要がある
+				//TODO
+				if ($first_number === 20101) {
+					// echo($first_number . PHP_EOL);
+					// var_dump($j);
+					var_dump("----20000--$j-");
+					exit;
+				}
+
+			}
+// var_dump('kkkkk');
+// var_dump($k);
+
+		}
+
+		// TODO 数値の桁を計算
+		// self::digit($this->first_number);
+		//TODO
+		// var_dump($first_number);
+		var_dump('5けた');
+	}
 
 	/**
 	 * 数値をループし、回文を出力する
