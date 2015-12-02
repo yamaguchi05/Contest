@@ -191,9 +191,6 @@ class Loop
 		}
 		// TODO 数値の桁を計算
 		self::digit($this->first_number);
-		//TODO
-		var_dump($first_number);
-		var_dump('3けた');
 	}
 
 	/**
@@ -235,7 +232,6 @@ class Loop
 		// TODO 数値の桁を計算
 		self::digit($this->first_number);
 		//TODO
-		var_dump($first_number);
 		var_dump('4けた');
 	}
 
@@ -251,10 +247,11 @@ class Loop
 	{
 		// 10000から99999までの回文は10001,10101,10201,11011,1221..,9009,9119,9999
 		// 1-5,2-4がおなじ
-		//for中：10001にして9回まわして100タス（10101）-最後10901
-		//for外：110足す（11011）、9回まわす
+		//for(i)：10001にして9回まわして100タス（10101）-最後10901
+		//for(j)：110足す（11011）、9回まわす
+		//for(k)：全体をまわす
 
-		for ($k = 0 ; $k < 9 ; $k++) {
+		for ($k = 0 ; $k < 10 ; $k++) {
 
 			for ($j = 0 ; $j < 9 ; $j++) {
 
@@ -268,12 +265,82 @@ class Loop
 						echo($first_number . PHP_EOL);
 					}
 					$this->total_count = $total_count++;
+				//for(i)閉め
 				}
-// TODO
-// var_dump('iiiiii');
-// var_dump($i);
-// var_dump('jjjjj');
-// var_dump($j);
+				//for外
+				//19991の次が20101になるので、1タス必要がある
+				// はたしてどのタイミングなのか？メモ-i-9,j-0,k-1"
+				if ($i === 9 && $j === 0 && $k === 1) {
+					//TODO 確認してみる
+					$first_number = ($first_number + 11);
+					var_dump('20002への切り替え');
+					echo($first_number . PHP_EOL);
+					continue;
+				}
+//TODO 30003への切り替え
+				if ($i === 9 && $j === 1 && $k === 2) {
+					//TODO 確認してみる
+					$first_number = ($first_number + 11);
+					var_dump('30003への切り替え');
+					echo($first_number . PHP_EOL);
+					continue;
+				}
+
+//TODO 40004への切り替え
+				if ($i === 9 && $j === 2 && $k === 3) {
+					//TODO 確認してみる
+					$first_number = ($first_number + 11);
+					var_dump('40004への切り替え');
+					echo($first_number . PHP_EOL);
+					continue;
+				}
+
+//TODO 50005への切り替え
+				if ($i === 9 && $j === 3 && $k === 4) {
+					//TODO 確認してみる
+					$first_number = ($first_number + 11);
+					var_dump('50005への切り替え');
+					echo($first_number . PHP_EOL);
+					continue;
+				}
+
+//TODO 60006への切り替え
+				if ($i === 9 && $j === 4 && $k === 5) {
+					//TODO 確認してみる
+					$first_number = ($first_number + 11);
+					var_dump('60006への切り替え');
+					echo($first_number . PHP_EOL);
+					continue;
+				}
+
+//TODO 70007への切り替え
+				if ($i === 9 && $j === 5 && $k === 6) {
+					//TODO 確認してみる
+					$first_number = ($first_number + 11);
+					var_dump('70007への切り替え');
+					echo($first_number . PHP_EOL);
+					continue;
+				}
+
+
+//TODO 80008への切り替え
+				if ($i === 9 && $j === 6 && $k === 7) {
+					//TODO 確認してみる
+					$first_number = ($first_number + 11);
+					var_dump('80008への切り替え');
+					echo($first_number . PHP_EOL);
+					continue;
+				}
+
+//TODO 90009への切り替え
+				if ($i === 9 && $j === 7 && $k === 8) {
+					//TODO 確認してみる
+					$first_number = ($first_number + 11);
+					var_dump('90009への切り替え');
+					echo($first_number . PHP_EOL);
+					continue;
+				}
+
 
 				$first_number = ($first_number + 110);
 				$reverse_first_number = (int) strrev($first_number);
@@ -281,26 +348,11 @@ class Loop
 					// macで改行を確認するため：PHP_EOL
 					echo($first_number . PHP_EOL);
 				}
-
-				//19991の次が20101になるので、1タス必要がある
-				//TODO
-				if ($first_number === 20101) {
-					// echo($first_number . PHP_EOL);
-					// var_dump($j);
-					var_dump("----20000--$j-");
-					exit;
-				}
-
+			//for(j)閉め
 			}
-// var_dump('kkkkk');
-// var_dump($k);
-
+		//for(k)閉め
 		}
-
-		// TODO 数値の桁を計算
-		// self::digit($this->first_number);
 		//TODO
-		// var_dump($first_number);
 		var_dump('5けた');
 	}
 
