@@ -16,11 +16,12 @@
  * 
  */
 
-// 自分的な設計めも
-// よく出る数値があるなら定数ファイルをもつ
-// メソッドで区切って最後に出力はなしなのか、確認する
-// 計算、出力の繰り返しにはなると思う
-// 出力方法はおいておいて最初に計算を考える
+// 整形
+// 同じ処理はメソッドに切り出す
+// マジックナンバーは定数に置き換える
+// 余裕があれば・・・
+// 仕様３にチャレンジする
+// （余裕ない場合は$this->end_number辺りを削除する
 
 require_once(DIR_PATH . '/' . 'const.php');
 
@@ -53,19 +54,17 @@ class Loop
 	}
 
 	/**
-	 * 名前はとりあえず、仮で。。
-	 * メイン
+	 * メインメソッド
+	 * 1桁目をスキップし、桁数に応じて処理を分岐させる
 	 */
 	public function main()
 	{
-		// 端数
-		$fraction = 0;
 		// 1桁の場合、端数を計算し2桁までスキップする
+		// TODO [仕様３]余裕がない場合は && 以降を削除する
 		if ($this->first_number_length === 1 && $this->end_number_length > 1 ) {
 			// 10に設定しておく
-			$fraction = (10 - $this->first_number);
-			$this->first_number = $this->first_number + $fraction;
-			// TODO 数値の桁を計算
+			$this->first_number = self::replace_number($this->first_number, 10);
+			// 数値の桁を計算
 			self::digit($this->first_number);
 		}
 
@@ -111,7 +110,23 @@ class Loop
 	}
 
 	/**
-	 * 2桁
+	 * 目的の数値に置き換える
+	 *
+	 * @param int  $first_number    現状の数値
+	 * @param int  $target_number   置き換えたい数値
+	 * @return int $replaced_number 置き換えた数値
+	 */
+	private function replace_number($first_number, $target_number)
+	{
+		// 端数
+		$fraction = 0;
+		$fraction = ($target_number - $first_number);
+		return $first_number + $fraction;
+	}
+
+	/**
+	 * 2桁の場合
+	 * 11以降は、11を加算していく
 	 * 数値をループし、回文を出力する
 	 *
 	 * @param int $first_number 始まり数値
@@ -120,42 +135,34 @@ class Loop
 	 */
 	private function calculate_two_digits($first_number, $end_number, $total_count)
 	{
-		// 10から100までの回文は11～99
-		// 11のあとは+11していって、出力する
-
-		// 11に調整
-		// ※2桁で11以上の場合の処理は余裕があれば考える
+		// TODO [仕様３] 2桁で11以上の場合
 		if ($first_number < 11){
-			$fraction = (11 - $first_number);
-			$first_number = $first_number + $fraction;
+			$first_number = self::replace_number($first_number, 11);
 			echo($first_number . PHP_EOL);
 		}
 
 		$count = (100 / 11) - 2;
 		for ($i = 0 ; $i < $count ; $i++) {
-			// 文字列を反転させて、同じ場合は、回文
+			// 文字列を反転させて、同じ場合は、回文とみなす
 			$first_number = ($first_number + 11);
 			$reverse_first_number = (int) strrev($first_number);
 			if ($first_number === $reverse_first_number) {
-				// macで改行を確認するため：PHP_EOL
 				echo($first_number . PHP_EOL);
 			}
 			$this->total_count = $total_count++;
 		}
 
-		// 100に調整 ※調整メソッドは別だししたいけど一旦かいとく
 		if ($first_number < 101){
-			$fraction = (101 - $first_number);
-			$this->first_number = $first_number + $fraction;
+			$this->first_number = self::replace_number($first_number, 101);
 			echo($this->first_number . PHP_EOL);
 		}
 
-		// TODO 数値の桁を計算
+		// 数値の桁を計算
 		self::digit($this->first_number);
 	}
 
 	/**
-	 * 3桁
+	 * 3桁の場合
 	 * 数値をループし、回文を出力する
 	 *
 	 * @param int $first_number 始まり数値
