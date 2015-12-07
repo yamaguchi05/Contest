@@ -16,17 +16,10 @@
  * 
  */
 
-// 整形
-// 同じ処理はメソッドに切り出す
-// マジックナンバーは定数に置き換える
-// 余裕があれば・・・
-// 仕様３にチャレンジする
-// （余裕ない場合は$this->end_number辺りを削除する
-
 require_once(DIR_PATH . '/' . 'const.php');
 
 /**
- * 回文を作成し、出力するクラス
+ * 引数をもとに、回文を作成し、出力する
  */
 class Loop
 {
@@ -55,7 +48,7 @@ class Loop
 
 	/**
 	 * メインメソッド
-	 * 1桁目をスキップし、桁数に応じて処理を分岐させる
+	 * 1桁目はスキップし、桁数に応じて処理を行う
 	 */
 	public function main()
 	{
@@ -67,28 +60,22 @@ class Loop
 			self::digit($this->first_number);
 		}
 
-		// 2桁の場合
 		if($this->first_number_length === 2){
 			self::calculate_two_digits($this->first_number, $this->end_number, $this->total_count);
 		}
 
-		// 3桁の場合
 		if($this->first_number_length === 3){
 			self::calculate_three_digits($this->first_number, $this->end_number, $this->total_count);
 		}
 
-		// 4桁の場合
 		if($this->first_number_length === 4){
 			self::calculate_four_digits($this->first_number, $this->end_number, $this->total_count);
 		}
 
-		// 5桁の場合
 		if($this->first_number_length === 5){
 			self::calculate_five_digits($this->first_number, $this->end_number, $this->total_count);
 		}
 
-
-		//　最後に出力
 		print("トータルカウント : $this->total_count" . PHP_EOL);
 	}
 
@@ -131,9 +118,8 @@ class Loop
 	}
 
 	/**
-	 * 2桁の場合
-	 * 11以降は、11を加算していく
-	 * 数値をループし、回文を出力する
+	 * 数値が2桁の場合
+	 * 11以降は、ループし、11を加算していく...11,22...
 	 *
 	 * @param int $first_number 始まり数値
 	 * @param int $end_number   終わり数値
@@ -148,13 +134,10 @@ class Loop
 		}
 
 		$count = (100 / 11) - 2;
+		//TODO 外メソッド希望
 		for ($i = 0 ; $i < $count ; $i++) {
-			// 文字列を反転させて、同じ場合は、回文とみなす
 			$first_number = ($first_number + 11);
-			$reverse_first_number = (int) strrev($first_number);
-			if ($first_number === $reverse_first_number) {
-				echo($first_number . PHP_EOL);
-			}
+			self::print_palindrome($first_number);
 			$this->total_count = $total_count++;
 		}
 
@@ -168,8 +151,9 @@ class Loop
 	}
 
 	/**
-	 * 3桁の場合
-	 * 数値をループし、回文を出力する
+	 * 数値が3桁の場合
+	 * 101以降は、ループし、10を加算していく...111,121...
+	 * 100の位が上がるタイミングで11を加算する...191,202...
 	 *
 	 * @param int $first_number 始まり数値
 	 * @param int $end_number   終わり数値
@@ -177,38 +161,30 @@ class Loop
 	 */
 	private function calculate_three_digits($first_number, $end_number, $total_count)
 	{
-		// 100から1000までの回文は101,111,121..,202,212..～999
-		// 外側の数がおなじならおけ
-		//for中：101にして9回まわして10タス（191）11足す（202）、9回まわす
 		for ($j = 0 ; $j < 9 ; $j++) {
 			//TODO 外メソッド希望
 			for ($i = 0 ; $i < 9 ; $i++) {
-				// 文字列を反転させて、同じ場合は、回文
 				$first_number = ($first_number + 10);
-				$reverse_first_number = (int) strrev($first_number);
-				if ($first_number === $reverse_first_number) {
-					// macで改行を確認するため：PHP_EOL
-					echo($first_number . PHP_EOL);
-				}
+				self::print_palindrome($first_number);
 				$this->total_count = $total_count++;
 			}
 
 			$first_number = ($first_number + 11);
-			// 1000以上だったら、調整してループ抜ける
+
 			if ($first_number > 1000) {
 				$first_number = self::replace_number($first_number, 1001, false);
 				$this->first_number = $first_number;
 			}
-			// TODO回文チェック
-			echo($first_number . PHP_EOL);
+			self::print_palindrome($first_number);
 		}
 		// 数値の桁を計算
 		self::digit($this->first_number);
 	}
 
 	/**
-	 * 4桁
-	 * 数値をループし、回文を出力する
+	 * 数値が4桁の場合
+	 * 1001以降は、ループし、110を加算していく...1001,1111...
+	 * 1000の位が上がるタイミングで11を加算する...1991,2002...
 	 *
 	 * @param int $first_number 始まり数値
 	 * @param int $end_number   終わり数値
@@ -216,39 +192,30 @@ class Loop
 	 */
 	private function calculate_four_digits($first_number, $end_number, $total_count)
 	{
-		// 1000から10000までの回文は1001,1111,1221..,9009,9119,9999
-		// 外側の数がおなじ、もしくは内側がおなじ
-		//for中：1001にして9回まわして110タス（1111）
-		//for外：11足す（2002）、9回まわす
 		for ($j = 0 ; $j < 9 ; $j++) {
 			//TODO 外メソッド希望
 			for ($i = 0 ; $i < 9 ; $i++) {
-				// 文字列を反転させて、同じ場合は、回文
 				$first_number = ($first_number + 110);
-				$reverse_first_number = (int) strrev($first_number);
-				if ($first_number === $reverse_first_number) {
-					// macで改行を確認するため：PHP_EOL
-					echo($first_number . PHP_EOL);
-				}
+				self::print_palindrome($first_number);
 				$this->total_count = $total_count++;
 			}
 
 			$first_number = ($first_number + 11);
-			// 1000以上だったら、調整してループ抜ける
 			if ($first_number > 10000) {
 				$first_number = self::replace_number($first_number, 10001, false);
 				$this->first_number = $first_number;
 			}
-			// 回文チェック
-			echo($first_number . PHP_EOL);
+			self::print_palindrome($first_number);
 		}
 		// 数値の桁を計算
 		self::digit($this->first_number);
 	}
 
 	/**
-	 * 5桁
-	 * 数値をループし、回文を出力する
+	 * 数値が5桁の場合
+	 * 10001以降は、ループし、100を加算していく...10101,10201...
+	 * 1000の位が上がるタイミングで110を加算する...10901,11011...
+	 * 10000の位が上がるタイミングで11を加算する...19991,20002...
 	 *
 	 * @param int $first_number 始まり数値
 	 * @param int $end_number   終わり数値
@@ -256,8 +223,6 @@ class Loop
 	 */
 	private function calculate_five_digits($first_number, $end_number, $total_count)
 	{
-		// 10000から99999までの回文は10001,10101,10201,11011,1221..,9009,9119,9999
-		// 1-5,2-4がおなじ
 		//for(i)：10001にして9回まわして100タス（10101）-最後10901
 		//for(j)：110足す（11011）、9回まわす
 		//for(k)：全体をまわす
@@ -268,126 +233,89 @@ class Loop
 
 				//TODO 外メソッド希望
 				for ($i = 0 ; $i < 9 ; $i++) {
-					// 文字列を反転させて、同じ場合は、回文
 					$first_number = ($first_number + 100);
-					$reverse_first_number = (int) strrev($first_number);
-					if ($first_number === $reverse_first_number) {
-						// macで改行を確認するため：PHP_EOL
-						echo($first_number . PHP_EOL);
-					}
+					self::print_palindrome($first_number);
 					$this->total_count = $total_count++;
 				//for(i)閉め
 				}
-				//for外
-				//19991の次が20101になるので、1タス必要がある
-				// はたしてどのタイミングなのか？メモ-i-9,j-0,k-1"
+
 				if ($i === 9 && $j === 0 && $k === 1) {
-					//TODO 確認してみる
 					$first_number = ($first_number + 11);
-					var_dump('20002への切り替え');
+					// var_dump('20002への切り替え');
 					echo($first_number . PHP_EOL);
 					continue;
 				}
-//TODO 30003への切り替え
+
 				if ($i === 9 && $j === 1 && $k === 2) {
-					//TODO 確認してみる
 					$first_number = ($first_number + 11);
-					var_dump('30003への切り替え');
+					// var_dump('30003への切り替え');
 					echo($first_number . PHP_EOL);
 					continue;
 				}
 
-//TODO 40004への切り替え
 				if ($i === 9 && $j === 2 && $k === 3) {
-					//TODO 確認してみる
 					$first_number = ($first_number + 11);
-					var_dump('40004への切り替え');
+					// var_dump('40004への切り替え');
 					echo($first_number . PHP_EOL);
 					continue;
 				}
 
-//TODO 50005への切り替え
 				if ($i === 9 && $j === 3 && $k === 4) {
-					//TODO 確認してみる
 					$first_number = ($first_number + 11);
-					var_dump('50005への切り替え');
+					// var_dump('50005への切り替え');
 					echo($first_number . PHP_EOL);
 					continue;
 				}
 
-//TODO 60006への切り替え
 				if ($i === 9 && $j === 4 && $k === 5) {
-					//TODO 確認してみる
 					$first_number = ($first_number + 11);
-					var_dump('60006への切り替え');
+					// var_dump('60006への切り替え');
 					echo($first_number . PHP_EOL);
 					continue;
 				}
 
-//TODO 70007への切り替え
 				if ($i === 9 && $j === 5 && $k === 6) {
-					//TODO 確認してみる
 					$first_number = ($first_number + 11);
-					var_dump('70007への切り替え');
+					// var_dump('70007への切り替え');
 					echo($first_number . PHP_EOL);
 					continue;
 				}
 
 
-//TODO 80008への切り替え
 				if ($i === 9 && $j === 6 && $k === 7) {
-					//TODO 確認してみる
 					$first_number = ($first_number + 11);
-					var_dump('80008への切り替え');
+					// var_dump('80008への切り替え');
 					echo($first_number . PHP_EOL);
 					continue;
 				}
 
-//TODO 90009への切り替え
 				if ($i === 9 && $j === 7 && $k === 8) {
-					//TODO 確認してみる
 					$first_number = ($first_number + 11);
-					var_dump('90009への切り替え');
+					// var_dump('90009への切り替え');
 					echo($first_number . PHP_EOL);
 					continue;
 				}
-
 
 				$first_number = ($first_number + 110);
-				$reverse_first_number = (int) strrev($first_number);
-				if ($first_number === $reverse_first_number) {
-					// macで改行を確認するため：PHP_EOL
-					echo($first_number . PHP_EOL);
-				}
+				self::print_palindrome($first_number);
 			//for(j)閉め
 			}
 		//for(k)閉め
 		}
-		//TODO
-		var_dump('5けた');
+
 	}
+
 
 	/**
-	 * 数値をループし、回文を出力する
+	 * 引数が回文である場合は出力する
 	 *
-	 * @param int $first_number 始まり数値
-	 * @param int $end_number   終わり数値
-	 * @param int $total_count  ループのトータルカウント
+	 * @param int $first_number 対象の数値
 	 */
-	private function calculate_digits($first_number, $end_number, $total_count)
+	private function print_palindrome($first_number)
 	{
-		// 最後の文字も出力させるために
-		$end_number += 1;
-		for ($first_number; $first_number < $end_number; $first_number++) {
-			// 文字列を反転させて、同じ場合は、回文
-			$reverse_first_number = (int) strrev($first_number);
-			if ($first_number === $reverse_first_number) {
-				// macで改行を確認するため：PHP_EOL
-				echo($first_number . PHP_EOL);
-			}
-			$this->total_count = $total_count++;
+		$reverse_first_number = (int) strrev($first_number);
+		if ($first_number === $reverse_first_number) {
+			echo($first_number . PHP_EOL);
 		}
 	}
-
-
 }
