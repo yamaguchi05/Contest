@@ -48,7 +48,7 @@ class Loop
 		}
 		$this->first_number = $_SERVER['argv'][INDEX_FIRST_NUMBER];
 		$this->end_number = $_SERVER['argv'][INDEX_END_NUMBER];
-		// TODO 数値の桁を計算
+		// 数値の桁を計算
 		self::digit($this->first_number);
 		self::digit($this->end_number,false);
 	}
@@ -62,9 +62,8 @@ class Loop
 		// 1桁の場合、端数を計算し2桁までスキップする
 		// TODO [仕様３]余裕がない場合は && 以降を削除する
 		if ($this->first_number_length === 1 && $this->end_number_length > 1 ) {
-			// 10に設定しておく
+			// 10に置き換える
 			$this->first_number = self::replace_number($this->first_number, 10);
-			// 数値の桁を計算
 			self::digit($this->first_number);
 		}
 
@@ -114,14 +113,21 @@ class Loop
 	 *
 	 * @param int  $first_number    現状の数値
 	 * @param int  $target_number   置き換えたい数値
+	 * @param bool $bool     true : 置き換えたい値より現状の数値が小さいとき
+	 *                      false : 置き換えたい値より現状の数値が大きいとき
 	 * @return int $replaced_number 置き換えた数値
 	 */
-	private function replace_number($first_number, $target_number)
+	private function replace_number($first_number, $target_number, $bool = true)
 	{
 		// 端数
 		$fraction = 0;
-		$fraction = ($target_number - $first_number);
-		return $first_number + $fraction;
+		if ($bool === true) {
+			$fraction = ($target_number - $first_number);
+			return $first_number + $fraction;
+		}else{
+			$fraction = ($first_number - $target_number);
+			return $first_number - $fraction;
+		}
 	}
 
 	/**
@@ -190,13 +196,13 @@ class Loop
 			$first_number = ($first_number + 11);
 			// 1000以上だったら、調整してループ抜ける
 			if ($first_number > 1000) {
-				$first_number = 1001;
-				$this->first_number = $first_number;//ルール的に微妙の可能性あり//だめならいつもの
-				// continue;
+				$first_number = self::replace_number($first_number, 1001, false);
+				$this->first_number = $first_number;
 			}
+			// TODO回文チェック
 			echo($first_number . PHP_EOL);
 		}
-		// TODO 数値の桁を計算
+		// 数値の桁を計算
 		self::digit($this->first_number);
 	}
 
@@ -230,16 +236,14 @@ class Loop
 			$first_number = ($first_number + 11);
 			// 1000以上だったら、調整してループ抜ける
 			if ($first_number > 10000) {
-				$first_number = 10001;//ルール的に微妙の可能性あり//だめならいつもの
+				$first_number = self::replace_number($first_number, 10001, false);
 				$this->first_number = $first_number;
-				// continue;
 			}
+			// 回文チェック
 			echo($first_number . PHP_EOL);
 		}
-		// TODO 数値の桁を計算
+		// 数値の桁を計算
 		self::digit($this->first_number);
-		//TODO
-		var_dump('4けた');
 	}
 
 	/**
